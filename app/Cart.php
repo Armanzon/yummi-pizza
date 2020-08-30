@@ -26,7 +26,11 @@ class Cart
 
     public function addItem($id, $product)
     {
-        $price = (int) str_replace("$", "", $product->price);
+        $price = $product->price;
+
+//        dd($price);
+
+//        $price = (int) str_replace("$", "", $product->price);
 
         // the item already exists
         if(array_key_exists($id, $this->items)){

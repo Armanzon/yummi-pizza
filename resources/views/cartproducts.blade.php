@@ -5,10 +5,16 @@
     <div class="container">
         <div class="breadcrumbs">
             <ol class="breadcrumb">
-                <li><a href="#">Home</a></li>
-                <li class="active">Shopping Cart</li>
+                <li><a href="{{ route('allProducts') }}">Home</a></li>
+                <li class="active">
+                    @if(Auth::check())
+                    {{ $userData->name }}'s
+                    @endif
+                    Pizza Order
+                </li>
             </ol>
         </div>
+
         <div class="table-responsive cart_info">
             <table class="table table-condensed">
                 <thead>
@@ -33,17 +39,17 @@
                         <p>{{ $item['data'] ['description'] }}</p>
                     </td>
                     <td class="cart_price">
-                        <p>{{ $item['data'] ['price'] }}</p>
+                        <p>$ {{ $item['data'] ['price'] }}</p>
                     </td>
                     <td class="cart_quantity">
                         <div class="cart_quantity_button">
-                            <a class="cart_quantity_up" href=""> + </a>
+                            <a class="cart_quantity_down" href="{{ route('DecreaseSingleProduct', ['id' => $item['data'] ['id']]) }}"> - </a>
                             <input class="cart_quantity_input" type="text" name="quantity" value="{{ $item['quantity'] }}" autocomplete="off" size="2">
-                            <a class="cart_quantity_down" href=""> - </a>
+                            <a class="cart_quantity_up" href="{{ route('IncreaseSingleProduct', ['id' => $item['data'] ['id']]) }}"> + </a>
                         </div>
                     </td>
                     <td class="cart_total">
-                        <p class="cart_total_price">{{ $item['totalSinglePrice'] }}</p>
+                        <p class="cart_total_price">$ {{ $item['totalSinglePrice'] }}</p>
                     </td>
                     <td class="cart_delete">
                         <a class="cart_quantity_delete" href="{{ route('DeleteItemFromCart', ['id' => $item['data'] ['id']]) }}"><i class="fa fa-times"></i></a>
@@ -54,81 +60,30 @@
             </table>
         </div>
     </div>
-</section> <!--/#cart_items-->
+</section>
 
 <section id="do_action">
     <div class="container">
         <div class="heading">
-            <h3>What would you like to do next?</h3>
-            <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
+            <h3>Want to order more pizza?</h3>
+            <p>Back to the => <span><a href="{{ route('allProducts') }}">PIZZA MENU</a></span></p>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <div class="chose_area">
-                    <ul class="user_option">
-                        <li>
-                            <input type="checkbox">
-                            <label>Use Coupon Code</label>
-                        </li>
-                        <li>
-                            <input type="checkbox">
-                            <label>Use Gift Voucher</label>
-                        </li>
-                        <li>
-                            <input type="checkbox">
-                            <label>Estimate Shipping & Taxes</label>
-                        </li>
-                    </ul>
-                    <ul class="user_info">
-                        <li class="single_field">
-                            <label>Country:</label>
-                            <select>
-                                <option>United States</option>
-                                <option>Bangladesh</option>
-                                <option>UK</option>
-                                <option>India</option>
-                                <option>Pakistan</option>
-                                <option>Ucrane</option>
-                                <option>Canada</option>
-                                <option>Dubai</option>
-                            </select>
-
-                        </li>
-                        <li class="single_field">
-                            <label>Region / State:</label>
-                            <select>
-                                <option>Select</option>
-                                <option>Dhaka</option>
-                                <option>London</option>
-                                <option>Dillih</option>
-                                <option>Lahore</option>
-                                <option>Alaska</option>
-                                <option>Canada</option>
-                                <option>Dubai</option>
-                            </select>
-
-                        </li>
-                        <li class="single_field zip-field">
-                            <label>Zip Code:</label>
-                            <input type="text">
-                        </li>
-                    </ul>
-                    <a class="btn btn-default update" href="">Get Quotes</a>
-                    <a class="btn btn-default check_out" href="">Continue</a>
-                </div>
             </div>
+            @if($cartItems->totalQuantity > 0)
             <div class="col-sm-6">
                 <div class="total_area">
                     <ul>
                         <li>No. of Pizza's<span>{{ $cartItems->totalQuantity }}</span></li>
-                        <li>Shipping Cost<span>Free</span></li>
-                        <li>Total Cost<span>{{ $cartItems->totalPrice }}</span></li>
+                        <li>Delivery Cost<span>Free</span></li>
+                        <li>Total Cost<span>$ {{ $cartItems->totalPrice }}</span></li>
                     </ul>
-                    <a class="btn btn-default update" href="">Update</a>
-                    <a class="btn btn-default check_out" href="">Check Out</a>
+                    <a class="btn btn-default check_out" href="{{ route('checkoutProducts') }}">Check Out</a>
                 </div>
             </div>
+            @endif
         </div>
     </div>
-</section><!--/#do_action-->
+</section>
 @endsection
